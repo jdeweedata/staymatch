@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import db from "@/lib/db";
+import { computeTasteVector } from "@/lib/services/embeddings";
 
 const VALID_DIRECTIONS = ["LEFT", "RIGHT", "SUPER_LIKE"] as const;
 type SwipeDirection = (typeof VALID_DIRECTIONS)[number];
@@ -94,6 +95,12 @@ export async function POST(request: NextRequest) {
           onboardingComplete: false,
         },
         data: { onboardingComplete: true },
+      });
+
+      // Compute taste vector in background (non-blocking)
+      // Errors are logged but don't affect the swipe response
+      computeTasteVector(user.id).catch((error) => {
+        console.error("[swipes] Taste vector computation failed:", error);
       });
     }
 

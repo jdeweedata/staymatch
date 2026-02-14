@@ -1,12 +1,24 @@
 import OpenAI from "openai";
 import { prisma as db } from "@/lib/db";
 
-// Initialize OpenAI client
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 // Embedding model configuration
 const EMBEDDING_MODEL = "text-embedding-3-small";
-const EMBEDDING_DIMENSIONS = 1536;
+
+// Lazy-initialized OpenAI client (validates API key on first use)
+let _openai: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!_openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error(
+        "[embeddings] OPENAI_API_KEY environment variable is required"
+      );
+    }
+    _openai = new OpenAI({ apiKey });
+  }
+  return _openai;
+}
 
 /**
  * Build text content for embedding from hotel data.
@@ -40,17 +52,35 @@ export function buildEmbeddingText(hotel: {
  * Returns array of 1536 floats for text-embedding-3-small model.
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
-  console.log(`[embeddings] Generating embedding for text (${text.length} chars)`);
+  // Validate input
+  if (!text || !text.trim()) {
+    throw new Error("[embeddings] Cannot generate embedding for empty text");
+  }
 
-  const response = await openai.embeddings.create({
-    model: EMBEDDING_MODEL,
-    input: text,
-  });
+  console.log(
+    `[embeddings] Generating embedding for text (${text.length} chars)`
+  );
 
-  const embedding = response.data[0].embedding;
-  console.log(`[embeddings] Generated embedding with ${embedding.length} dimensions`);
+  try {
+    const openai = getOpenAIClient();
+    const response = await openai.embeddings.create({
+      model: EMBEDDING_MODEL,
+      input: text.trim(),
+    });
 
-  return embedding;
+    const embedding = response.data[0].embedding;
+    console.log(
+      `[embeddings] Generated embedding with ${embedding.length} dimensions`
+    );
+
+    return embedding;
+  } catch (error) {
+    // Add context to OpenAI errors
+    const message =
+      error instanceof Error ? error.message : "Unknown OpenAI error";
+    console.error(`[embeddings] OpenAI API error: ${message}`);
+    throw new Error(`[embeddings] Failed to generate embedding: ${message}`);
+  }
 }
 
 /**
@@ -72,7 +102,9 @@ export async function embedHotel(hotel: {
   // Format embedding as pgvector string: [0.1,0.2,0.3,...]
   const vectorString = `[${embedding.join(",")}]`;
 
-  // Update hotel with embedding using raw SQL
+  // NOTE: Using $executeRawUnsafe because Prisma's tagged template ($executeRaw)
+  // doesn't support pgvector's ::vector type casting. Parameters are passed
+  // separately ($1, $2) preventing SQL injection - this is safe.
   await db.$executeRawUnsafe(
     `UPDATE "HotelCache" SET embedding = $1::vector WHERE id = $2`,
     vectorString,
@@ -109,7 +141,9 @@ export async function computeTasteVector(userId: string): Promise<boolean> {
   }
 
   try {
-    // Compute average embedding and update user taste vector
+    // NOTE: Using $executeRawUnsafe because Prisma's tagged template doesn't
+    // support pgvector's AVG() aggregation on vector columns. Parameter is
+    // passed separately ($1) preventing SQL injection - this is safe.
     await db.$executeRawUnsafe(
       `UPDATE "User"
        SET "tasteVector" = (
