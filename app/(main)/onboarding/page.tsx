@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import SwipeStack, { SwipeItem } from "@/components/onboarding/SwipeStack";
 import HotelDetailSheet, { HotelDetail } from "@/components/hotels/HotelDetailSheet";
+import BottomNav from "@/components/ui/BottomNav";
 import { useSwipes } from "@/lib/hooks";
 
 // Extended hotel data for detail sheet
@@ -278,6 +279,7 @@ export default function OnboardingPage() {
   const [isComplete, setIsComplete] = useState(false);
   const [selectedHotel, setSelectedHotel] = useState<HotelDetail | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState("match");
   const swipeStackRef = useRef<HTMLDivElement>(null);
   const { swipe, undo, getProgress, error } = useSwipes();
 
@@ -402,49 +404,78 @@ export default function OnboardingPage() {
   }, [isDetailOpen]);
 
   return (
-    <main className="h-screen flex flex-col bg-background">
+    <main className="h-screen flex flex-col bg-background lg:ml-[220px]">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <button
-          onClick={() => router.back()}
-          className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Go back"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-lg border-b border-border/50">
+        {/* Mobile header */}
+        <div className="lg:hidden flex items-center justify-between px-4 py-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Go back"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
 
-        <div className="text-center">
-          <h1 className="font-display text-lg font-semibold text-foreground">
-            Build Your Taste
-          </h1>
-          <p className="text-xs text-muted-foreground">
-            Swipe to teach us your style
-          </p>
+          <div className="text-center">
+            <h1 className="font-display text-lg font-semibold text-foreground">
+              Build Your Taste
+            </h1>
+            <p className="text-xs text-text-secondary">
+              Swipe to teach us your style
+            </p>
+          </div>
+
+          <button
+            onClick={() => router.push("/matches")}
+            className="text-sm text-primary hover:text-primary-hover transition-colors"
+          >
+            Skip
+          </button>
         </div>
 
-        <button
-          onClick={() => router.push("/matches")}
-          className="text-sm text-primary hover:text-primary-hover transition-colors"
-        >
-          Skip
-        </button>
+        {/* Desktop header */}
+        <div className="hidden lg:flex items-center justify-between px-8 py-4 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.back()}
+              className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Go back"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">Build Your Taste</h1>
+              <p className="text-sm text-text-secondary">Swipe through hotels to teach us your preferences</p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => router.push("/matches")}
+            className="btn-secondary"
+          >
+            Skip for Now
+          </button>
+        </div>
       </header>
 
       {/* Swipe Stack */}
-      <div ref={swipeStackRef} className="flex-1 overflow-hidden">
+      <div ref={swipeStackRef} className="flex-1 overflow-hidden pb-20 lg:pb-0">
         <SwipeStack
           items={SAMPLE_HOTELS}
           onSwipeRight={handleSwipeRight}
@@ -485,10 +516,13 @@ export default function OnboardingPage() {
 
       {/* Error toast */}
       {error && (
-        <div className="fixed bottom-4 left-4 right-4 bg-accent-error text-white px-4 py-3 rounded-lg text-sm z-50">
+        <div className="fixed bottom-24 lg:bottom-4 left-4 right-4 lg:left-auto lg:right-4 lg:w-80 bg-accent-error text-white px-4 py-3 rounded-lg text-sm z-50">
           {error}
         </div>
       )}
+
+      {/* Bottom navigation */}
+      <BottomNav activeId={activeNav} onSelect={setActiveNav} />
     </main>
   );
 }
