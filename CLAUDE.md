@@ -181,21 +181,20 @@ User books → Post-stay data → Truth Score computed → AI improves → Bette
 ## Brand Guidelines
 
 ```css
-/* StayMatch brand colors (from design docs) */
---primary: #8B5CF6;      /* Purple - main brand */
---primary-light: #C4B5FD;
---secondary: #06B6D4;    /* Cyan - Truth Engine */
+/* StayMatch brand colors (updated 2026-02-14) */
+--primary: #FF3859;      /* Coral Red - CTAs, active states */
+--background: #FFFFFF;   /* White - backgrounds, cards */
+--text: #272823;         /* Charcoal - text, headings */
 --accent-success: #10B981;
 --accent-warning: #F59E0B;
 --accent-error: #EF4444;
---background: #0A0A0A;   /* Dark theme */
---text-primary: #FAFAFA;
---text-secondary: #A1A1AA;
 ```
 
-**Typography**: JetBrains Mono (code), Playfair Display (headings), DM Sans (body)
+**Typography**: DM Sans (body/UI), Playfair Display (headings), JetBrains Mono (code)
 
 **Positioning**: "Stop searching. Start matching."
+
+**Design System**: See `docs/design-system/` for full component library, tokens, and screenshots.
 
 ## Environment Variables
 
