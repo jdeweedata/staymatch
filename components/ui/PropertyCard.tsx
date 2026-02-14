@@ -88,7 +88,7 @@ export default function PropertyCard({
     }
 
     return (
-        <div className="flex-shrink-0 w-60 group">
+        <div className="flex-shrink-0 w-60 lg:w-full group">
             <div className="relative rounded-2xl overflow-hidden mb-2.5 aspect-[4/3]">
                 <img
                     src={image}

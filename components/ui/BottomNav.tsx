@@ -72,36 +72,81 @@ export default function BottomNav({
     onSelect,
 }: BottomNavProps) {
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border shadow-nav safe-bottom z-50">
-            <div className="max-w-lg mx-auto flex items-center justify-around py-2">
-                {navItems.map((item) => {
-                    const isActive = item.id === activeId;
-                    return (
-                        <button
-                            key={item.id}
-                            onClick={() => onSelect?.(item.id)}
-                            className={`
-                flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl
-                transition-all duration-200 min-w-[60px]
-                ${isActive
-                                    ? "text-primary"
-                                    : "text-text-tertiary hover:text-text-secondary"
-                                }
-              `}
-                        >
-                            <div className={`transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
+        <>
+            {/* ─── Mobile: Bottom bar ─── */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border shadow-nav safe-bottom z-50 lg:hidden">
+                <div className="max-w-lg mx-auto flex items-center justify-around py-2">
+                    {navItems.map((item) => {
+                        const isActive = item.id === activeId;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => onSelect?.(item.id)}
+                                className={`
+                  flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl
+                  transition-all duration-200 min-w-[60px]
+                  ${isActive ? "text-primary" : "text-text-tertiary hover:text-text-secondary"}
+                `}
+                            >
+                                <div className={`transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
+                                    {item.icon}
+                                </div>
+                                <span className={`text-[10px] font-medium ${isActive ? "font-semibold" : ""}`}>
+                                    {item.label}
+                                </span>
+                                {isActive && <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />}
+                            </button>
+                        );
+                    })}
+                </div>
+            </nav>
+
+            {/* ─── Desktop: Left sidebar ─── */}
+            <nav className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[220px] bg-white border-r border-border z-50 flex-col py-8 px-4">
+                {/* Brand */}
+                <div className="mb-10 px-3">
+                    <h1 className="text-xl font-bold text-foreground">StayMatch</h1>
+                    <p className="text-xs text-text-secondary mt-0.5">Stop searching. Start matching.</p>
+                </div>
+
+                {/* Nav items */}
+                <div className="flex flex-col gap-1 flex-1">
+                    {navItems.map((item) => {
+                        const isActive = item.id === activeId;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => onSelect?.(item.id)}
+                                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl
+                  transition-all duration-200 text-left w-full
+                  ${isActive
+                                        ? "bg-primary/10 text-primary font-semibold"
+                                        : "text-text-secondary hover:bg-surface-secondary hover:text-foreground"
+                                    }
+                `}
+                            >
                                 {item.icon}
-                            </div>
-                            <span className={`text-[10px] font-medium ${isActive ? "font-semibold" : ""}`}>
-                                {item.label}
-                            </span>
-                            {isActive && (
-                                <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />
-                            )}
-                        </button>
-                    );
-                })}
-            </div>
-        </nav>
+                                <span className="text-sm">{item.label}</span>
+                                {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Bottom profile */}
+                <div className="border-t border-border pt-4 mt-4 px-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                            S
+                        </div>
+                        <div className="min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">StayMatch User</p>
+                            <p className="text-xs text-text-secondary truncate">Premium Member</p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </>
     );
 }
