@@ -1,16 +1,11 @@
 declare module "liteapi-node-sdk" {
   interface LiteApiClient {
-    getDataCities(countryCode?: string): Promise<{ data?: unknown[] }>;
-    getDataHotels(
-      countryCode: string,
-      cityCode: string,
-      offset?: number,
-      limit?: number,
-      longitude?: string,
-      latitude?: string,
-      distance?: string
+    getCitiesByCountryCode(countryCode: string): Promise<{ data?: unknown[] }>;
+    getHotels(
+      parameters: Record<string, string | number>,
+      language?: string
     ): Promise<{ data?: unknown[] }>;
-    getDataHotelDetails(hotelId: string): Promise<{ data?: unknown }>;
+    getHotelDetails(hotelId: string, language?: string): Promise<{ data?: unknown }>;
     getFullRates(params: {
       hotelIds: string[];
       checkin: string;
@@ -34,5 +29,5 @@ declare module "liteapi-node-sdk" {
   }
 
   function LiteApi(apiKey: string): LiteApiClient;
-  export default LiteApi;
+  export = LiteApi;
 }

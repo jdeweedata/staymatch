@@ -10,6 +10,7 @@ const searchSchema = z.object({
   children: z.number().min(0).max(10).optional(),
   rooms: z.number().min(1).max(5).default(1),
   currency: z.string().length(3).default("USD"),
+  countryCode: z.string().length(2).optional(),
 });
 
 export async function POST(request: NextRequest) {

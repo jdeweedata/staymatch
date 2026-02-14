@@ -51,3 +51,4 @@ coverage
 *.log
 .cache
 .env
+.env*.local

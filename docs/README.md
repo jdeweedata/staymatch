@@ -6,6 +6,7 @@
 |--------|-------------|
 | [design-system/](design-system/) | Brand colors, components, tokens, and visual walkthrough |
 | [plans/](plans/) | Implementation plans and architecture decisions |
+| [tasks/](tasks/) | Work logs and implementation details for specific tasks |
 
 ## Quick Links
 

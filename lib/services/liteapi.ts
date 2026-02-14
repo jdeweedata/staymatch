@@ -15,6 +15,7 @@ export interface HotelSearchParams {
   rooms?: number;
   currency?: string;
   limit?: number;
+  countryCode?: string;
 }
 
 export interface Hotel {
@@ -145,7 +146,7 @@ export const liteApiService = {
       key,
       async () => {
         try {
-          const response = await client.getDataCities(countryCode || "");
+          const response = await client.getCitiesByCountryCode(countryCode || "US");
           return response.data || [];
         } catch (error) {
           console.error("LiteAPI getCities error:", error);
@@ -159,22 +160,18 @@ export const liteApiService = {
   /**
    * Get hotels by city code (cached for 1 hour)
    */
-  async getHotelsByCity(cityCode: string, limit = 50): Promise<Hotel[]> {
-    const key = cacheKey(CACHE_PREFIX.HOTELS, cityCode, limit);
+  async getHotelsByCity(cityCode: string, limit = 50, countryCode?: string): Promise<Hotel[]> {
+    const key = cacheKey(CACHE_PREFIX.HOTELS, cityCode, limit, countryCode || "no-country");
 
     return cached(
       key,
       async () => {
         try {
-          const response = await client.getDataHotels(
-            "", // country code (optional)
-            cityCode,
-            0, // offset
-            limit,
-            "", // longitude
-            "", // latitude
-            "" // distance
-          );
+          const response = await client.getHotels({
+            cityName: cityCode, // Using cityName instead of cityCode based on function intent
+            limit: limit,
+            countryCode: countryCode || "" // Try empty country code if not available
+          });
 
           const hotels: Hotel[] = [];
           if (response.data && Array.isArray(response.data)) {
@@ -203,7 +200,7 @@ export const liteApiService = {
       key,
       async () => {
         try {
-          const response = await client.getDataHotelDetails(hotelId);
+          const response = await client.getHotelDetails(hotelId);
           return normalizeHotel(response.data);
         } catch (error) {
           console.error("LiteAPI getHotelDetails error:", error);
@@ -220,7 +217,7 @@ export const liteApiService = {
   async searchRates(params: HotelSearchParams): Promise<HotelRate[]> {
     try {
       // First get hotels in the city
-      const hotels = await this.getHotelsByCity(params.cityCode, params.limit || 30);
+      const hotels = await this.getHotelsByCity(params.cityCode, params.limit || 30, params.countryCode);
 
       if (!hotels.length) {
         return [];
@@ -379,8 +376,15 @@ export const liteApiService = {
         try {
           const allHotels: Hotel[] = [];
 
+          const cityMap: Record<string, string> = {
+            "lisbon": "PT",
+            "bali": "ID",
+            "bangkok": "TH"
+          };
+
           for (const city of cities) {
-            const hotels = await this.getHotelsByCity(city, Math.ceil(limit / cities.length));
+            const country = cityMap[city.toLowerCase()] || "";
+            const hotels = await this.getHotelsByCity(city, Math.ceil(limit / cities.length), country);
             allHotels.push(...hotels);
           }
 
