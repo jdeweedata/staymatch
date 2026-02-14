@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import SwipeStack, { SwipeItem } from "@/components/onboarding/SwipeStack";
 import HotelDetailSheet, { HotelDetail } from "@/components/hotels/HotelDetailSheet";
+import { useSwipes } from "@/lib/hooks";
 
 // Extended hotel data for detail sheet
 // In production, these come from LiteAPI with full details
@@ -278,6 +279,18 @@ export default function OnboardingPage() {
   const [selectedHotel, setSelectedHotel] = useState<HotelDetail | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const swipeStackRef = useRef<HTMLDivElement>(null);
+  const { swipe, undo, getProgress, error } = useSwipes();
+
+  // Check progress on mount - redirect if already complete
+  useEffect(() => {
+    const checkProgress = async () => {
+      const progress = await getProgress();
+      if (progress?.isComplete) {
+        router.push("/matches");
+      }
+    };
+    checkProgress();
+  }, [getProgress, router]);
 
   // Convert SwipeItem to HotelDetail for the detail sheet
   const getHotelDetail = (item: SwipeItem): HotelDetail => {
@@ -338,15 +351,27 @@ export default function OnboardingPage() {
   );
 
   // Track individual swipes (for analytics/API)
-  const handleSwipeRight = useCallback((item: SwipeItem) => {
-    console.log("Liked:", item.title);
-    // In production: POST to /api/onboarding/swipe
-  }, []);
+  const handleSwipeRight = useCallback(
+    async (item: SwipeItem) => {
+      console.log("Liked:", item.title);
+      const result = await swipe(item.id, "RIGHT");
+      if (result?.isComplete) {
+        setIsComplete(true);
+        setTimeout(() => {
+          router.push("/matches");
+        }, 2000);
+      }
+    },
+    [swipe, router]
+  );
 
-  const handleSwipeLeft = useCallback((item: SwipeItem) => {
-    console.log("Passed:", item.title);
-    // In production: POST to /api/onboarding/swipe
-  }, []);
+  const handleSwipeLeft = useCallback(
+    async (item: SwipeItem) => {
+      console.log("Passed:", item.title);
+      await swipe(item.id, "LEFT");
+    },
+    [swipe]
+  );
 
   // Keyboard navigation
   useEffect(() => {
@@ -450,6 +475,13 @@ export default function OnboardingPage() {
               Computing your taste profile...
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Error toast */}
+      {error && (
+        <div className="fixed bottom-4 left-4 right-4 bg-accent-error text-white px-4 py-3 rounded-lg text-sm z-50">
+          {error}
         </div>
       )}
     </main>
