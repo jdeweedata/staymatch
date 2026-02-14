@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import SearchBar from "@/components/ui/SearchBar";
 import CategoryPill from "@/components/ui/CategoryPill";
 import PropertyCard from "@/components/ui/PropertyCard";
@@ -152,6 +153,7 @@ const nearbyProperties = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("bali");
   const [activeNav, setActiveNav] = useState("explore");
 
@@ -222,7 +224,11 @@ export default function Home() {
                 Swipe through hotels to build your taste profile and get AI-curated matches
                 tailored just for you. No filters, no noise — just your perfect match.
               </p>
-              <button className="bg-white text-primary font-semibold px-7 py-3 rounded-xl hover:bg-white/90 transition-colors shadow-md hover:shadow-lg">
+              <button
+                type="button"
+                onClick={() => router.push("/onboarding")}
+                className="bg-white text-primary font-semibold px-7 py-3 rounded-xl hover:bg-white/90 transition-colors shadow-md hover:shadow-lg cursor-pointer"
+              >
                 Start Matching
               </button>
             </div>
@@ -249,14 +255,19 @@ export default function Home() {
               <h2 className="text-base lg:text-lg font-bold text-foreground">
                 Recommended
               </h2>
-              <button className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors">
+              <button
+                onClick={() => router.push("/onboarding")}
+                className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors cursor-pointer"
+              >
                 See All
               </button>
             </div>
             {/* Mobile: horizontal scroll · Desktop: responsive grid */}
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:pb-0">
               {recommendedProperties.map((prop, i) => (
-                <PropertyCard key={i} {...prop} />
+                <div key={i} onClick={() => router.push("/booking")} className="cursor-pointer">
+                  <PropertyCard {...prop} />
+                </div>
               ))}
             </div>
           </section>
@@ -267,14 +278,19 @@ export default function Home() {
               <h2 className="text-base lg:text-lg font-bold text-foreground">
                 Nearby Resort
               </h2>
-              <button className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors">
+              <button
+                onClick={() => router.push("/onboarding")}
+                className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors cursor-pointer"
+              >
                 See All
               </button>
             </div>
             {/* Mobile: vertical list · Desktop: 2-column grid */}
             <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4">
               {nearbyProperties.map((prop, i) => (
-                <PropertyCard key={i} {...prop} compact />
+                <div key={i} onClick={() => router.push("/booking")} className="cursor-pointer">
+                  <PropertyCard {...prop} compact />
+                </div>
               ))}
             </div>
           </section>
@@ -291,7 +307,11 @@ export default function Home() {
                 <p className="text-white/80 text-sm mb-4">
                   Swipe through hotels to build your taste profile and get AI-curated matches.
                 </p>
-                <button className="bg-white text-primary font-semibold px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors text-sm">
+                <button
+                  type="button"
+                  onClick={() => router.push("/onboarding")}
+                  className="bg-white text-primary font-semibold px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors text-sm cursor-pointer"
+                >
                   Start Matching
                 </button>
               </div>
