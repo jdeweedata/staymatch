@@ -1,0 +1,295 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String?
+  avatarUrl    String?
+
+  // Preference profile (computed from swipes)
+  tasteVector   Unsupported("vector(1536)")?
+  preferences   Json?    // Structured preferences from questions
+  dealBreakers  String[] // e.g., ["no_wifi", "shared_bathroom"]
+  delightFactors String[] // e.g., ["rooftop_bar", "gym"]
+
+  // Onboarding status
+  onboardingComplete Boolean @default(false)
+
+  // Relationships
+  swipes        Swipe[]
+  bookings      Booking[]
+  contributions Contribution[]
+  sessions      Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+// ============================================
+// SWIPE ONBOARDING
+// ============================================
+
+model Swipe {
+  id           String         @id @default(cuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelImageId String
+  hotelImage   HotelImage     @relation(fields: [hotelImageId], references: [id])
+  direction    SwipeDirection
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, hotelImageId])
+  @@index([userId])
+}
+
+enum SwipeDirection {
+  LEFT
+  RIGHT
+  SUPER_LIKE
+}
+
+// ============================================
+// HOTEL DATA (LiteAPI Cache + Enrichment)
+// ============================================
+
+model HotelCache {
+  id        String @id // LiteAPI hotel ID
+  name      String
+  city      String
+  country   String
+  latitude  Float?
+  longitude Float?
+  starRating Float?
+
+  // Cached LiteAPI data
+  description String? @db.Text
+  amenities   String[]
+  images      Json // Array of image URLs with metadata
+
+  // AI-computed embedding for matching
+  embedding Unsupported("vector(1536)")?
+
+  // Crowdsourced Truth Engine aggregates
+  avgWifiDownload   Float?
+  avgWifiUpload     Float?
+  wifiTestCount     Int      @default(0)
+  avgNoiseLevel     Float?
+  noiseTestCount    Int      @default(0)
+  communityRating   Float?
+  contributionCount Int      @default(0)
+
+  // Deal-breaker flags (crowdsourced boolean consensus)
+  hasHotWater         Boolean?
+  hasBlackoutCurtains Boolean?
+  hasQuietRooms       Boolean?
+  hasGoodAC           Boolean?
+  hasWorkDesk         Boolean?
+
+  // Truth Score (computed from all data)
+  truthScore      Float?
+  truthConfidence Float? // Based on contribution count
+
+  lastSynced DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  hotelImages   HotelImage[]
+  bookings      Booking[]
+  contributions Contribution[]
+
+  @@index([city])
+  @@index([truthScore])
+}
+
+model HotelImage {
+  id       String  @id @default(cuid())
+  hotelId  String
+  hotel    HotelCache @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  imageUrl String
+  category String? // lobby, room, view, pool, exterior, bathroom
+  isActive Boolean @default(true)
+
+  // For onboarding swipe deck
+  inSwipeDeck Boolean @default(false)
+
+  swipes Swipe[]
+
+  createdAt DateTime @default(now())
+
+  @@index([hotelId])
+  @@index([inSwipeDeck])
+}
+
+// ============================================
+// BOOKING & COMMISSION TRACKING
+// ============================================
+
+model Booking {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // LiteAPI booking reference
+  liteapiBookingId String @unique
+  liteapiHotelId   String
+  hotel            HotelCache @relation(fields: [liteapiHotelId], references: [id])
+
+  // Booking details
+  hotelName  String
+  city       String
+  checkIn    DateTime
+  checkOut   DateTime
+  roomType   String
+  guestCount Int
+
+  // Pricing
+  totalPrice     Decimal @db.Decimal(10, 2)
+  currency       String  @default("USD")
+  commission     Decimal? @db.Decimal(10, 2)
+  commissionRate Float?
+
+  // Guest details
+  guestFirstName String
+  guestLastName  String
+  guestEmail     String
+
+  // Status
+  status           BookingStatus @default(CONFIRMED)
+  cancellationDate DateTime?
+
+  // Post-stay contribution tracking
+  contributionRequested   Boolean   @default(false)
+  contributionRequestedAt DateTime?
+  contribution            Contribution?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([checkOut])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+// ============================================
+// POST-STAY CONTRIBUTIONS (Truth Engine)
+// ============================================
+
+model Contribution {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  hotelId   String
+  hotel     HotelCache @relation(fields: [hotelId], references: [id])
+
+  // WiFi speed test results
+  wifiDownload Float? // Mbps
+  wifiUpload   Float? // Mbps
+  wifiPing     Float? // ms
+  wifiFloor    String? // e.g., "3rd floor, room 312"
+  wifiTestedAt DateTime?
+
+  // Photo uploads
+  photos ContributionPhoto[]
+
+  // Binary questions (5 required)
+  hotWaterReliable    Boolean?
+  blackoutCurtains    Boolean?
+  quietAtNight        Boolean?
+  acWorksWell         Boolean?
+  workDeskPresent     Boolean?
+
+  // Optional additional feedback
+  additionalNotes String? @db.Text
+
+  // Reward tracking
+  discountCode String? @unique
+  discountUsed Boolean @default(false)
+  discountUsedAt DateTime?
+
+  // Verification
+  verified   Boolean   @default(false)
+  verifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([hotelId])
+  @@index([verified])
+}
+
+model ContributionPhoto {
+  id             String       @id @default(cuid())
+  contributionId String
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  category       PhotoCategory
+  imageUrl       String
+  thumbnailUrl   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([contributionId])
+}
+
+enum PhotoCategory {
+  LOBBY
+  ROOM
+  VIEW
+}
+
+// ============================================
+// DISCOUNT CODES
+// ============================================
+
+model DiscountCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  discount    Float    // Percentage (e.g., 5.0 for 5%)
+  validUntil  DateTime
+  usedAt      DateTime?
+  usedByEmail String?
+
+  createdAt DateTime @default(now())
+
+  @@index([code])
+  @@index([validUntil])
+}

@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --primary: 263 70% 66%;
+    --primary-hover: 263 83% 57%;
+    --secondary: 187 85% 43%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 4% 65%;
+    --border: 240 4% 26%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-medium px-6 py-3 rounded-lg
+           hover:bg-primary-hover transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  .btn-secondary {
+    @apply bg-muted text-foreground font-medium px-6 py-3 rounded-lg
+           border border-border hover:bg-card-hover transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  .card {
+    @apply bg-card border border-border rounded-xl p-6;
+  }
+
+  .input {
+    @apply w-full bg-muted border border-border rounded-lg px-4 py-3
+           text-foreground placeholder:text-muted-foreground
+           focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+           transition-all duration-200;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-muted-foreground mb-2;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
