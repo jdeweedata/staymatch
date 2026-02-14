@@ -9,3 +9,9 @@ export type { MatchScoreBadgeProps } from "./MatchScoreBadge";
 
 export { MatchReasons } from "./MatchReasons";
 export type { MatchReasonsProps, MatchReason } from "./MatchReasons";
+
+export { default as Button } from "./Button";
+export { default as SearchBar } from "./SearchBar";
+export { default as CategoryPill } from "./CategoryPill";
+export { default as PropertyCard } from "./PropertyCard";
+export { default as BottomNav } from "./BottomNav";

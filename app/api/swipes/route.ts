@@ -110,3 +110,51 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    // Authenticate user
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: "Not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    // Count total swipes, liked swipes, and disliked swipes
+    const [count, liked, disliked] = await Promise.all([
+      db.swipe.count({
+        where: { userId: user.id },
+      }),
+      db.swipe.count({
+        where: {
+          userId: user.id,
+          direction: { in: ["RIGHT", "SUPER_LIKE"] },
+        },
+      }),
+      db.swipe.count({
+        where: {
+          userId: user.id,
+          direction: "LEFT",
+        },
+      }),
+    ]);
+
+    // Determine if onboarding is complete
+    const isComplete = count >= MIN_SWIPES_FOR_COMPLETE && liked >= MIN_LIKES_FOR_COMPLETE;
+
+    return NextResponse.json({
+      count,
+      liked,
+      disliked,
+      isComplete,
+    });
+  } catch (error) {
+    console.error("Get swipe progress error:", error);
+    return NextResponse.json(
+      { error: "Failed to get swipe progress" },
+      { status: 500 }
+    );
+  }
+}

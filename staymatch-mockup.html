@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayMatch — Stop Searching. Start Matching.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Core Colors */
+            --primary: #FF385C;
+            --primary-dark: #E31C5F;
+            --primary-light: #FF5A70;
+
+            /* Neutrals */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F7F7F7;
+            --bg-tertiary: #EBEBEB;
+            --text-primary: #222222;
+            --text-secondary: #717171;
+            --text-tertiary: #B0B0B0;
+            --border-color: #DDDDDD;
+
+            /* Semantic */
+            --success: #008A05;
+            --warning: #FFB400;
+            --error: #C13515;
+            --info: #428BFF;
+
+            /* Truth Score Colors */
+            --truth-excellent: #00A699;
+            --truth-good: #008A05;
+            --truth-average: #FFB400;
+            --truth-poor: #C13515;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.16);
+
+            /* Spacing (8px grid) */
+            --space-1: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+            --space-7: 56px;
+            --space-8: 64px;
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-6);
+        }
+
+        <a href="#" class="logo"><img src="staymatch_logo.png" alt="StayMatch" style="height: 40px;"></a>.nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .nav-link {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            transition: all var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero {
+            min-height: 100vh;
+            padding-top: 80px;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 56, 92, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-6);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 560px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 6px 16px;
+            background: rgba(255, 56, 92, 0.1);
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 5vw, 64px);
+            margin-bottom: var(--space-3);
+            color: var(--text-primary);
+        }
+
+        .hero-title span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-5);
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-5);
+        }
+
+        .hero-cta .btn {
+            padding: 16px 32px;
+            font-size: 18px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: var(--space-5);
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ==================== PHONE MOCKUP ==================== */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 650px;
+            background: var(--text-primary);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            transform: perspective(1000px) rotateY(-5deg);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 32px;
+            background: var(--text-primary);
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+
+        /* ==================== SWIPE INTERFACE ==================== */
+        .swipe-app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            padding: var(--space-2);
+            padding-top: var(--space-5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .app-location svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--primary);
+        }
+
+        .app-filters {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .app-filters svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-secondary);
+        }
+
+        .swipe-container {
+            flex: 1;
+            padding: var(--space-2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .property-card {
+            position: absolute;
+            width: calc(100% - 32px);
+            height: 420px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            cursor: grab;
+            transform-origin: center bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:active {
+            cursor: grabbing;
+        }
+
+        .property-card.card-1 {
+            z-index: 3;
+        }
+
+        .property-card.card-2 {
+            z-index: 2;
+            transform: scale(0.95) translateY(-10px);
+            opacity: 0.7;
+        }
+
+        .property-card.card-3 {
+            z-index: 1;
+            transform: scale(0.9) translateY(-20px);
+            opacity: 0.4;
+        }
+
+        .card-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .card-1 .card-image {
+            background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80');
+        }
+
+        .card-2 .card-image {
+            background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80');
+        }
+
+        .card-3 .card-image {
+            background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80');
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-badge {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-badge.truth-score {
+            background: var(--truth-excellent);
+            color: white;
+        }
+
+        .card-badge.verified {
+            color: var(--success);
+        }
+
+        .card-favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .card-favorite svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: var(--text-primary);
+            stroke-width: 2;
+        }
+
+        .card-content {
+            padding: var(--space-2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .card-rating svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-primary);
+        }
+
+        .card-location {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .card-truth-details {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-top: 1px solid var(--bg-tertiary);
+        }
+
+        .truth-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .truth-item svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-secondary);
+        }
+
+        .truth-item.good {
+            color: var(--truth-excellent);
+        }
+
+        .truth-item.good svg {
+            fill: var(--truth-excellent);
+        }
+
+        .card-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .price-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Swipe Actions */
+        .swipe-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-3);
+            padding: var(--space-2);
+            padding-bottom: var(--space-3);
+        }
+
+        .action-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.skip {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .action-btn.skip svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .action-btn.superlike {
+            background: var(--info);
+        }
+
+        .action-btn.superlike svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .action-btn.like {
+            background: var(--primary);
+            width: 64px;
+            height: 64px;
+        }
+
+        .action-btn.like svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        /* ==================== FEATURES SECTION ==================== */
+        .features {
+            padding: var(--space-8) var(--space-6);
+            background: var(--bg-primary);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+        }
+
+        .section-title {
+            font-size: clamp(32px, 4vw, 48px);
+            margin-bottom: var(--space-2);
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            background: var(--bg-secondary);
+            transition: all var(--transition-normal);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .feature-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ==================== TRUTH ENGINE SECTION ==================== */
+        .truth-section {
+            padding: var(--space-8) var(--space-6);
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .truth-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+            align-items: center;
+        }
+
+        .truth-content .section-title {
+            color: white;
+        }
+
+        .truth-content .section-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: var(--space-5);
+        }
+
+        .truth-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+        }
+
+        .truth-metric {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .truth-metric:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--truth-excellent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-2);
+        }
+
+        .metric-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .metric-icon.wifi {
+            background: var(--info);
+        }
+
+        .metric-icon.noise {
+            background: var(--success);
+        }
+
+        .metric-icon.photos {
+            background: var(--warning);
+        }
+
+        .metric-icon.cleanliness {
+            background: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: var(--truth-excellent);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+
+        .truth-visual {
+            position: relative;
+        }
+
+        .truth-score-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-xl);
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .score-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+
+        .score-badge {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--truth-excellent) 0%, #00CDB8 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .score-info h4 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .score-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .score-item-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .score-item-label svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-tertiary);
+        }
+
+        .score-item-bar {
+            width: 120px;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .score-item-fill {
+            height: 100%;
+            background: var(--truth-excellent);
+            border-radius: var(--radius-full);
+            transition: width 1s ease;
+        }
+
+        .score-item-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 32px;
+            text-align: right;
+        }
+
+        /* ==================== HOW IT WORKS ==================== */
+        .how-it-works {
+            padding: var(--space-8) var(--space-6);
+            background: var(--bg-secondary);
+        }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -24px;
+            width: 48px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-3);
+            background: var(--bg-primary);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .step-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            color: var(--text-primary);
+        }
+
+        .step-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 250px;
+            margin: 0 auto;
+        }
+
+        /* ==================== CTA SECTION ==================== */
+        .cta-section {
+            padding: var(--space-8) var(--space-6);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section .section-title {
+            color: white;
+        }
+
+        .cta-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: var(--space-5);
+        }
+
+        .cta-form {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto var(--space-4);
+        }
+
+        .cta-input {
+            flex: 1;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--text-primary);
+        }
+
+        .cta-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .cta-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-btn {
+            background: var(--text-primary);
+            color: white;
+            white-space: nowrap;
+        }
+
+        .cta-btn:hover {
+            background: #333;
+        }
+
+        .cta-note {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            padding: var(--space-6);
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .footer-logo .logo-text {
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .footer-link {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-fast);
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                margin-top: var(--space-5);
+            }
+
+            .phone-mockup {
+                transform: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .truth-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .truth-visual {
+                margin-top: var(--space-5);
+            }
+
+            .steps-container {
+                flex-direction: column;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 var(--space-2);
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 80px;
+            }
+
+            .hero-container {
+                padding: var(--space-3);
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-2);
+                align-items: center;
+            }
+
+            .stat {
+                text-align: center;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-visual {
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .feature-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .feature-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .property-card.card-1:hover {
+            animation: pulse 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+            </div>
+            <span class="logo-text">Stay<span>Match</span></span>
+        </a>
+        <nav class="nav">
+            <a href="#features" class="nav-link">How It Works</a>
+            <a href="#truth" class="nav-link">Truth Engine</a>
+            <a href="#" class="nav-link">For Hosts</a>
+            <a href="#" class="btn btn-ghost">Log in</a>
+            <a href="#" class="btn btn-primary">Get Started</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                    </svg>
+                    AI-Powered Matching
+                </div>
+                <h1 class="hero-title">Stop Searching.<br><span>Start Matching.</span></h1>
+                <p class="hero-subtitle">StayMatch learns what you actually want in a hotel — then finds it. No filters.
+                    No 500 results. Just your perfect match.</p>
+                <div class="hero-cta">
+                    <a href="#" class="btn btn-primary">Start Matching Free</a>
+                    <a href="#" class="btn btn-secondary">Watch Demo</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">2M+</div>
+                        <div class="stat-label">Properties</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Match Accuracy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">App Rating</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="phone-notch"></div>
+                        <div class="swipe-app">
+                            <div class="app-header">
+                                <div class="app-location">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                    </svg>
+                                    Barcelona, Spain
+                                </div>
+                                <div class="app-filters">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="swipe-container">
+                                <div class="property-card card-3">
+                                    <div class="card-image"></div>
+                                </div>
+                                <div class="property-card card-2">
+                                    <div class="card-image"></div>
+                                </div>
+                                <div class="property-card card-1" id="swipeCard">
+                                    <div class="card-image">
+                                        <div class="card-badges">
+                                            <span class="card-badge truth-score">94 Truth Score</span>
+                                            <span class="card-badge verified">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path
+                                                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                                                </svg>
+                                                Verified
+                                            </span>
+                                        </div>
+                                        <div class="card-favorite">
+                                            <svg viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <div>
+                                                <h3 class="card-title">Casa Batlló Suite</h3>
+                                                <p class="card-location">Gothic Quarter · 0.5 km center</p>
+                                            </div>
+                                            <div class="card-rating">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                                                </svg>
+                                                4.92
+                                            </div>
+                                        </div>
+                                        <div class="card-truth-details">
+                                            <div class="truth-item good">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                                                </svg>
+                                                156 Mbps
+                                            </div>
+                                            <div class="truth-item good">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                                                </svg>
+                                                32 dB
+                                            </div>
+                                            <div class="truth-item">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                </svg>
+                                                98% match
+                                            </div>
+                                        </div>
+                                        <div class="card-price">
+                                            <span class="price-value">€189</span>
+                                            <span class="price-period">/ night</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swipe-actions">
+                                <button class="action-btn skip">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                                    </svg>
+                                </button>
+                                <button class="action-btn superlike">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                                    </svg>
+                                </button>
+                                <button class="action-btn like">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Why Travelers Love StayMatch</h2>
+            <p class="section-subtitle">No more endless scrolling through 500+ results. We show you the one that's right
+                for you.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Swipe, Don't Search</h3>
+                <p class="feature-desc">Answer 5 quick questions or simply swipe through visual cards. The more you use
+                    it, the smarter it gets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l4.59-4.59L16 11l-6 6z" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Truth Engine™</h3>
+                <p class="feature-desc">Real WiFi speeds. Actual noise levels. Photos verified against guest
+                    submissions. No more surprises at check-in.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                </div>
+                <h3 class="feature-title">Taste Profile AI</h3>
+                <p class="feature-desc">Your unique preferences across aesthetic, practical, and budget dimensions.
+                    Every swipe makes your matches better.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Truth Engine Section -->
+    <section class="truth-section" id="truth">
+        <div class="truth-container">
+            <div class="truth-content">
+                <div class="section-header" style="text-align: left; margin: 0;">
+                    <h2 class="section-title">The Truth Engine™</h2>
+                    <p class="section-subtitle">Every listing shows what guests actually experienced, not what hosts
+                        promised. Verified data from real stays.</p>
+                </div>
+                <div class="truth-metrics">
+                    <div class="truth-metric">
+                        <div class="metric-icon wifi">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"
+                                    fill="white" />
+                            </svg>
+                        </div>
+                        <div class="metric-label">WiFi Speed</div>
+                        <div class="metric-value">156 Mbps <span class="metric-tag">Excellent</span></div>
+                    </div>
+                    <div class="truth-metric">
+                        <div class="metric-icon noise">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+                                    fill="white" />
+                            </svg>
+                        </div>
+                        <div class="metric-label">Noise Level</div>
+                        <div class="metric-value">32 dB <span class="metric-tag">Quiet</span></div>
+                    </div>
+                    <div class="truth-metric">
+                        <div class="metric-icon photos">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"
+                                    fill="white" />
+                            </svg>
+                        </div>
+                        <div class="metric-label">Photo Accuracy</div>
+                        <div class="metric-value">98% <span class="metric-tag">Match</span></div>
+                    </div>
+                    <div class="truth-metric">
+                        <div class="metric-icon cleanliness">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M17.66 8L12 2.35 6.34 8C4.78 9.56 4 11.64 4 13.64s.78 4.11 2.34 5.67 3.61 2.35 5.66 2.35 4.1-.79 5.66-2.35S20 15.64 20 13.64 19.22 9.56 17.66 8z"
+                                    fill="white" />
+                            </svg>
+                        </div>
+                        <div class="metric-label">Cleanliness</div>
+                        <div class="metric-value">4.9/5 <span class="metric-tag">Spotless</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="truth-visual">
+                <div class="truth-score-card">
+                    <div class="score-header">
+                        <div class="score-badge">94</div>
+                        <div class="score-info">
+                            <h4>Truth Score</h4>
+                            <p>Based on 147 verified stays</p>
+                        </div>
+                    </div>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <span class="score-item-label">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                                </svg>
+                                WiFi
+                            </span>
+                            <div class="score-item-bar">
+                                <div class="score-item-fill" style="width: 95%"></div>
+                            </div>
+                            <span class="score-item-value">95</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3z" />
+                                </svg>
+                                Quiet
+                            </span>
+                            <div class="score-item-bar">
+                                <div class="score-item-fill" style="width: 92%"></div>
+                            </div>
+                            <span class="score-item-value">92</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                </svg>
+                                Photos
+                            </span>
+                            <div class="score-item-bar">
+                                <div class="score-item-fill" style="width: 98%"></div>
+                            </div>
+                            <span class="score-item-value">98</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.66 8L12 2.35 6.34 8C4.78 9.56 4 11.64 4 13.64s.78 4.11 2.34 5.67 3.61 2.35 5.66 2.35 4.1-.79 5.66-2.35S20 15.64 20 13.64 19.22 9.56 17.66 8z" />
+                                </svg>
+                                Clean
+                            </span>
+                            <div class="score-item-bar">
+                                <div class="score-item-fill" style="width: 91%"></div>
+                            </div>
+                            <span class="score-item-value">91</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2 class="section-title">How StayMatch Works</h2>
+            <p class="section-subtitle">Find your perfect stay in three simple steps</p>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Tell Us Your Vibe</h3>
+                <p class="step-desc">Answer 5 quick questions about what matters most — WiFi speed, quiet space,
+                    aesthetic, location.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Swipe Your Matches</h3>
+                <p class="step-desc">We serve you properties that match your taste. Swipe right on what you love, left
+                    on what you don't.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Book with Confidence</h3>
+                <p class="step-desc">Every listing shows Truth Scores from real guests. Know exactly what you're getting
+                    before you book.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="section-header">
+            <h2 class="section-title">Ready to Find Your Match?</h2>
+            <p class="section-subtitle">Join 50,000+ travelers who stopped searching and started matching.</p>
+        </div>
+        <form class="cta-form" onsubmit="handleSubmit(event)">
+            <input type="email" class="cta-input" placeholder="Enter your email" required>
+            <button type="submit" class="btn cta-btn">Get Early Access</button>
+        </form>
+        <p class="cta-note">Free to join. No credit card required. Cancel anytime.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Stay<span>Match</span></span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Careers</a>
+                <a href="#" class="footer-link">Press</a>
+                <a href="#" class="footer-link">For Hosts</a>
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-link">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-link">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-link">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Swipe Card Interaction
+        const swipeCard = document.getElementById('swipeCard');
+        let startX, startY, currentX, currentY, isDragging = false;
+
+        swipeCard.addEventListener('mousedown', startDrag);
+        swipeCard.addEventListener('touchstart', startDrag);
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            swipeCard.style.transition = 'none';
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+
+            e.preventDefault();
+            currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = currentX - startX;
+            const deltaY = currentY - startY;
+            const rotation = deltaX * 0.1;
+
+            swipeCard.style.transform = `translateX(${deltaX}px) translateY(${deltaY * 0.2}px) rotate(${rotation}deg)`;
+
+            // Visual feedback
+            if (deltaX > 50) {
+                swipeCard.style.boxShadow = '0 8px 28px rgba(0, 166, 153, 0.3)';
+            } else if (deltaX < -50) {
+                swipeCard.style.boxShadow = '0 8px 28px rgba(255, 56, 92, 0.3)';
+            } else {
+                swipeCard.style.boxShadow = 'var(--shadow-lg)';
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const deltaX = currentX - startX;
+
+            swipeCard.style.transition = 'all 0.3s ease';
+
+            if (Math.abs(deltaX) > 100) {
+                // Swipe action
+                const direction = deltaX > 0 ? 1 : -1;
+                swipeCard.style.transform = `translateX(${direction * 500}px) rotate(${direction * 30}deg)`;
+                swipeCard.style.opacity = '0';
+
+                setTimeout(() => {
+                    swipeCard.style.transform = '';
+                    swipeCard.style.opacity = '';
+                    swipeCard.style.boxShadow = '';
+                }, 300);
+            } else {
+                // Reset
+                swipeCard.style.transform = '';
+                swipeCard.style.boxShadow = '';
+            }
+        }
+
+        // Action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const isLike = this.classList.contains('like');
+                const isSuperlike = this.classList.contains('superlike');
+                const direction = isLike || isSuperlike ? 1 : -1;
+
+                swipeCard.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                swipeCard.style.transform = `translateX(${direction * 500}px) rotate(${direction * 30}deg)`;
+                swipeCard.style.opacity = '0';
+
+                if (isSuperlike) {
+                    swipeCard.style.transform = 'translateY(-500px) scale(1.2)';
+                }
+
+                setTimeout(() => {
+                    swipeCard.style.transition = 'none';
+                    swipeCard.style.transform = '';
+                    swipeCard.style.opacity = '';
+
+                    setTimeout(() => {
+                        swipeCard.style.transition = '';
+                    }, 50);
+                }, 400);
+            });
+        });
+
+        // Form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('input').value;
+            alert(`Thanks for signing up! We'll notify you at ${email} when StayMatch launches.`);
+            e.target.reset();
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step, .truth-metric').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

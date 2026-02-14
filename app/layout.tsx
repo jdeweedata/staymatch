@@ -53,7 +53,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0A0A0A",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
@@ -64,7 +64,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${playfair.variable} ${jetbrainsMono.variable} dark`}
+      className={`${dmSans.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen bg-background font-sans">
         {children}
