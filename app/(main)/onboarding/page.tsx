@@ -373,6 +373,10 @@ export default function OnboardingPage() {
     [swipe]
   );
 
+  const handleUndo = useCallback(async () => {
+    await undo();
+  }, [undo]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -447,6 +451,7 @@ export default function OnboardingPage() {
           onSwipeLeft={handleSwipeLeft}
           onTap={handleTap}
           onComplete={handleComplete}
+          onUndo={handleUndo}
           visibleCards={3}
         />
       </div>

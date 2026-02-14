@@ -27,6 +27,8 @@ export interface SwipeStackProps {
   onTap?: (item: SwipeItem) => void;
   /** Called when all items have been swiped */
   onComplete?: (results: { liked: SwipeItem[]; disliked: SwipeItem[] }) => void;
+  /** Called when undo button is clicked (before local state is restored) */
+  onUndo?: () => void;
   /** Number of cards visible in the stack */
   visibleCards?: number;
   /** Custom className */
@@ -39,6 +41,7 @@ export function SwipeStack({
   onSwipeLeft,
   onTap,
   onComplete,
+  onUndo,
   visibleCards = 3,
   className,
 }: SwipeStackProps) {
@@ -239,6 +242,7 @@ export function SwipeStack({
         <button
           onClick={() => {
             if (currentIndex > 0) {
+              onUndo?.();
               setCurrentIndex(currentIndex - 1);
               // Remove from liked/disliked
               const lastItem = items[currentIndex - 1];
