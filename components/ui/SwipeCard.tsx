@@ -305,7 +305,7 @@ export const SwipeCard = forwardRef<HTMLDivElement, SwipeCardProps>(
 
             {/* Rating & Price */}
             <div className="flex items-center justify-between">
-              {rating !== undefined && (
+              {rating != null && (
                 <div className="flex items-center gap-1">
                   {renderStars(rating)}
                   <span className="text-white/70 text-sm ml-1">

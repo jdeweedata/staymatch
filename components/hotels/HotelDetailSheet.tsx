@@ -212,15 +212,17 @@ export function HotelDetailSheet({
               <span className="text-muted-foreground">{hotel.location}</span>
             </div>
 
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex">{renderStars(hotel.rating)}</div>
-              <span className="text-foreground font-medium">{hotel.rating.toFixed(1)}</span>
-              {hotel.reviewCount && (
-                <span className="text-muted-foreground text-sm">
-                  ({hotel.reviewCount.toLocaleString()} reviews)
-                </span>
-              )}
-            </div>
+            {hotel.rating != null && (
+              <div className="flex items-center gap-2 mt-2">
+                <div className="flex">{renderStars(hotel.rating)}</div>
+                <span className="text-foreground font-medium">{hotel.rating.toFixed(1)}</span>
+                {hotel.reviewCount && (
+                  <span className="text-muted-foreground text-sm">
+                    ({hotel.reviewCount.toLocaleString()} reviews)
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Match Reasons */}
