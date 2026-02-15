@@ -50,7 +50,7 @@ export default function Footer() {
             <Image
               src="/staymatch_logo.svg"
               alt="StayMatch"
-              width={120}
+              width={140}
               height={30}
               className="h-7 w-auto opacity-80 hover:opacity-100 transition-opacity"
             />

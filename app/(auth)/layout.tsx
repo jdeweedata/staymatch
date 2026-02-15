@@ -15,9 +15,9 @@ export default function AuthLayout({
             <Image
               src="/staymatch_logo.svg"
               alt="StayMatch"
-              width={180}
-              height={45}
-              className="h-10 w-auto mx-auto"
+              width={200}
+              height={43}
+              className="h-11 w-auto mx-auto"
             />
           </Link>
           <p className="text-sm text-muted-foreground mt-2">

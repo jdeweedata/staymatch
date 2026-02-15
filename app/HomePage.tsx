@@ -94,9 +94,9 @@ export default function HomePage({ recommended, nearby }: LandingPageData) {
                             <Image
                                 src="/staymatch_logo.svg"
                                 alt="StayMatch"
-                                width={120}
+                                width={140}
                                 height={30}
-                                className="h-6 w-auto"
+                                className="h-8 w-auto"
                             />
                         </div>
                         <div className="flex items-center gap-3">

@@ -122,9 +122,9 @@ export default function BottomNav({
                     <Image
                         src="/staymatch_logo.svg"
                         alt="StayMatch"
-                        width={140}
+                        width={160}
                         height={35}
-                        className="h-8 w-auto"
+                        className="h-9 w-auto"
                     />
                     <p className="text-xs text-text-secondary mt-2">Stop searching. Start matching.</p>
                 </div>

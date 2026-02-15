@@ -35,10 +35,10 @@ export default function LandingNav() {
             <Image
               src="/staymatch_logo.svg"
               alt="StayMatch"
-              width={140}
-              height={35}
+              width={175}
+              height={38}
               priority
-              className="h-8 lg:h-9 w-auto"
+              className="h-8 lg:h-10 w-auto"
             />
           </Link>
 
