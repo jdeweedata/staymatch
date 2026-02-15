@@ -159,11 +159,8 @@ function PreviewCardComponent({
 
 export default function SwipePreview() {
   const [cards, setCards] = useState(previewCards);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleSwipe = () => {
-    setCurrentIndex((prev) => (prev + 1) % previewCards.length);
-
     // Rotate cards
     setCards((prev) => {
       const newCards = [...prev];

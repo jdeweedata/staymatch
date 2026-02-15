@@ -7,10 +7,23 @@ import CategoryPill from "@/components/ui/CategoryPill";
 import PropertyCard from "@/components/ui/PropertyCard";
 import BottomNav from "@/components/ui/BottomNav";
 
+// Hotel data shape from LiteAPI
+interface HotelData {
+    id?: string;
+    name: string;
+    image?: string;
+    main_photo?: string;
+    city?: string;
+    country?: string;
+    starRating?: number;
+    price?: number;
+    currency?: string;
+}
+
 // Define interface for the data passed from Server Component
 interface LandingPageData {
-    recommended: any[]; // We'll refine this type
-    nearby: any[];
+    recommended: HotelData[];
+    nearby: HotelData[];
 }
 
 const categories = [
@@ -57,12 +70,12 @@ export default function HomePage({ recommended, nearby }: LandingPageData) {
     const [activeNav, setActiveNav] = useState("explore");
 
     // Map backend data to PropertyCard props
-    const mapHotelToCard = (hotel: any) => ({
+    const mapHotelToCard = (hotel: HotelData) => ({
         image: hotel.image || hotel.main_photo || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80", // Fallback
         title: hotel.name,
         location: hotel.city || hotel.country || "Unknown Location",
         rating: hotel.starRating || 4.5,
-        price: Math.round(hotel.price),
+        price: Math.round(hotel.price ?? 0),
         currency: hotel.currency === "USD" ? "$" : hotel.currency,
         period: "night",
         badge: undefined,

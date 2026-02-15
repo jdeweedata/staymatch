@@ -319,9 +319,11 @@ export const liteApiService = {
       // Transform response to our format
       const rates: HotelRate[] = [];
 
-      const responseData = (response as any).data;
+      const responseData = (response as { data?: unknown }).data;
       // Handle potential nested data structure (some endpoints return { data: [...] }, some { data: { data: [...] } })
-      const rawRates = Array.isArray(responseData) ? responseData : responseData?.data;
+      const rawRates = Array.isArray(responseData)
+        ? responseData
+        : (responseData as { data?: unknown } | undefined)?.data;
 
       if (rawRates && Array.isArray(rawRates)) {
         for (const item of rawRates) {
@@ -512,9 +514,6 @@ export const liteApiService = {
     ];
 
     try {
-      const recommended: HotelRate[] = [];
-      const nearby: HotelRate[] = [];
-
       // Run searches in parallel
       console.log("Running searchRates...");
       const results = await Promise.all(

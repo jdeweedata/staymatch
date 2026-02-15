@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCitySearch } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,6 @@ export function CityAutocomplete({
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
-  const [isLoadingRecent, setIsLoadingRecent] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,7 +43,6 @@ export function CityAutocomplete({
     if (!showRecent) return;
 
     const fetchRecent = async () => {
-      setIsLoadingRecent(true);
       try {
         const res = await fetch("/api/cities/recent");
         if (res.ok) {
@@ -53,8 +51,6 @@ export function CityAutocomplete({
         }
       } catch {
         // Ignore errors (user might not be authenticated)
-      } finally {
-        setIsLoadingRecent(false);
       }
     };
 
@@ -147,13 +143,16 @@ export function CityAutocomplete({
   }, [onChange, clear]);
 
   // Build combined list for keyboard navigation
-  const allItems: Array<{ type: "recent" | "result"; data: City | RecentSearch }> = [];
+  const allItems = useMemo(() => {
+    const items: Array<{ type: "recent" | "result"; data: City | RecentSearch }> = [];
 
-  if (inputValue.length === 0 && recentSearches.length > 0) {
-    recentSearches.forEach((r) => allItems.push({ type: "recent", data: r }));
-  }
+    if (inputValue.length === 0 && recentSearches.length > 0) {
+      recentSearches.forEach((r) => items.push({ type: "recent", data: r }));
+    }
 
-  results.forEach((r) => allItems.push({ type: "result", data: r }));
+    results.forEach((r) => items.push({ type: "result", data: r }));
+    return items;
+  }, [inputValue.length, recentSearches, results]);
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
