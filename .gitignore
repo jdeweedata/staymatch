@@ -50,8 +50,18 @@ coverage
 # Misc
 *.log
 .cache
+
+# Local env files
 .env
 .env*.local
-Sun Feb 15 00:13:38 CET 2026
-Sun Feb 15 00:18:17 CET 2026
-Sun Feb 15 00:24:42 CET 2026
+.env.vercel*
+
+# MCP config
+.mcp.json
+
+# Local docs
+docs/media/
+docs/tasks/
+
+# Test scripts
+scripts/test-*.ts
