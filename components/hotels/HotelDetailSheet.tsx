@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import BottomSheet from "@/components/ui/BottomSheet";
+import TruthScoreBadge from "@/components/ui/TruthScoreBadge";
 import { cn } from "@/lib/utils";
 
 export interface HotelDetail {
@@ -20,6 +21,13 @@ export interface HotelDetail {
   checkOut?: string;
   matchScore?: number;
   matchReasons?: string[];
+  truthScore?: number | null;
+  truthConfidence?: number | null;
+  contributionCount?: number;
+  avgWifiDownload?: number | null;
+  avgWifiUpload?: number | null;
+  avgNoiseLevel?: number | null;
+  verifiedAmenities?: Array<{ name: string; verified: boolean }>;
 }
 
 export interface HotelDetailSheetProps {
@@ -239,6 +247,65 @@ export function HotelDetailSheet({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {/* Verified Guest Data (Truth Engine) */}
+          {hotel.truthScore != null && (hotel.contributionCount ?? 0) > 0 && (
+            <div className="bg-muted rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <svg className="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                  Verified Guest Data
+                </h3>
+                <TruthScoreBadge score={hotel.truthScore} contributionCount={hotel.contributionCount} size="md" />
+              </div>
+
+              <p className="text-xs text-muted-foreground mb-3">
+                Based on {hotel.contributionCount} verified guest{(hotel.contributionCount ?? 0) !== 1 ? "s" : ""}
+              </p>
+
+              <div className="grid grid-cols-2 gap-2">
+                {hotel.avgWifiDownload != null && (
+                  <div className="bg-background rounded-lg p-2.5">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">WiFi Speed</p>
+                    <p className="text-sm font-bold text-foreground">{hotel.avgWifiDownload.toFixed(0)} Mbps</p>
+                    {hotel.avgWifiUpload != null && (
+                      <p className="text-[10px] text-muted-foreground">↑ {hotel.avgWifiUpload.toFixed(0)} Mbps</p>
+                    )}
+                  </div>
+                )}
+                {hotel.avgNoiseLevel != null && (
+                  <div className="bg-background rounded-lg p-2.5">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Noise Level</p>
+                    <p className="text-sm font-bold text-foreground">
+                      {hotel.avgNoiseLevel <= 2 ? "Quiet" : hotel.avgNoiseLevel <= 3.5 ? "Moderate" : "Noisy"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">{hotel.avgNoiseLevel.toFixed(1)} / 5</p>
+                  </div>
+                )}
+              </div>
+
+              {hotel.verifiedAmenities && hotel.verifiedAmenities.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {hotel.verifiedAmenities.map((amenity) => (
+                    <span
+                      key={amenity.name}
+                      className={cn(
+                        "text-xs px-2 py-0.5 rounded-full",
+                        amenity.verified
+                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                          : "bg-red-50 text-red-600 ring-1 ring-red-200"
+                      )}
+                    >
+                      {amenity.verified ? "✓" : "✗"} {amenity.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

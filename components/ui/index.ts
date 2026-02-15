@@ -15,3 +15,6 @@ export { default as SearchBar } from "./SearchBar";
 export { default as CategoryPill } from "./CategoryPill";
 export { default as PropertyCard } from "./PropertyCard";
 export { default as BottomNav } from "./BottomNav";
+
+export { TruthScoreBadge } from "./TruthScoreBadge";
+export type { TruthScoreBadgeProps } from "./TruthScoreBadge";

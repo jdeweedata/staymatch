@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import TruthScoreBadge from "./TruthScoreBadge";
 
 interface PropertyCardProps {
     image: string;
@@ -12,6 +13,8 @@ interface PropertyCardProps {
     period?: string;
     badge?: string;
     compact?: boolean;
+    truthScore?: number | null;
+    contributionCount?: number;
 }
 
 export default function PropertyCard({
@@ -24,6 +27,8 @@ export default function PropertyCard({
     period = "night",
     badge,
     compact = false,
+    truthScore,
+    contributionCount = 0,
 }: PropertyCardProps) {
     const [liked, setLiked] = useState(false);
 
@@ -96,11 +101,16 @@ export default function PropertyCard({
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Rating badge */}
-                <div className="absolute top-3 left-3 badge-rating">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#272823">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                    <span className="text-xs font-bold">{rating}</span>
+                <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    <div className="badge-rating">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#272823">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                        <span className="text-xs font-bold">{rating}</span>
+                    </div>
+                    {truthScore != null && contributionCount > 0 && (
+                        <TruthScoreBadge score={truthScore} contributionCount={contributionCount} size="sm" />
+                    )}
                 </div>
                 {/* Favorite button */}
                 <button

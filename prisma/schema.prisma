@@ -157,6 +157,8 @@ model Contribution {
   quietAtNight     Boolean?
   acWorksWell      Boolean?
   workDeskPresent  Boolean?
+  noiseLevel       Float?
+  overallRating    Int?
   additionalNotes  String?
   discountCode     String?             @unique
   discountUsed     Boolean             @default(false)

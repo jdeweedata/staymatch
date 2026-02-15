@@ -23,6 +23,7 @@ export interface BookingConfirmationProps {
   booking: BookingDetails;
   onViewBooking?: () => void;
   onBackToHome?: () => void;
+  onContribute?: () => void;
   className?: string;
 }
 
@@ -30,6 +31,7 @@ export function BookingConfirmation({
   booking,
   onViewBooking,
   onBackToHome,
+  onContribute,
   className,
 }: BookingConfirmationProps) {
   const formatDate = (date: Date) => {
@@ -197,6 +199,37 @@ export function BookingConfirmation({
             </button>
           )}
         </motion.div>
+
+        {/* Contribution CTA */}
+        {onContribute && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+            className="bg-gradient-to-r from-primary/10 to-emerald-500/10 rounded-xl p-4 mt-4"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg className="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground text-sm">Help Future Travelers</h3>
+                <p className="text-xs text-muted-foreground mt-0.5 mb-2">
+                  Share WiFi speeds, noise levels, and more after your stay. Earn 10% off your next booking.
+                </p>
+                <button
+                  onClick={onContribute}
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  Contribute after checkout →
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Help Text */}
         <motion.p
