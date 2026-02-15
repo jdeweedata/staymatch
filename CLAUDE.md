@@ -99,13 +99,24 @@ AI-powered accommodation matching platform. Guidance for AI assistants working w
 ## Essential Commands
 
 ```bash
-# Development (once codebase is established)
-npm run dev                 # Dev server
+# Development
+npm run dev                 # Dev server on localhost:3000
 npm run type-check          # TypeScript check
+npm run lint                # ESLint check
 npm run build               # Production build
+
+# Database (Prisma)
+npm run db:migrate          # Create migration
+npm run db:push             # Push schema (no migration)
+npm run db:studio           # Open Prisma Studio
+
+# Seeding & Scripts
+npm run seed-swipe-deck     # Populate swipe deck with hotels
+npm run embed-hotels        # Generate embeddings for hotels
 
 # Pre-Commit (MANDATORY)
 npm run type-check          # Must pass before commit
+npm run lint                # Should pass before commit
 ```
 
 ## Key Documents
@@ -219,6 +230,17 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 See `.env.example` for template.
 
+## Gotchas
+
+- **Next.js 15 dynamic routes**: `params` is a Promise - must `await params`
+- **pgvector + Prisma**: Must use `$executeRawUnsafe` for `::vector` casting
+- **LiteAPI SDK**: No types - use `types/liteapi-node-sdk.d.ts`
+- **useSearchParams**: Requires Suspense wrapper in static pages
+- **Git paths with parentheses**: Need quotes: `"app/(main)/..."`
+- **request.json()**: Always wrap in try/catch (can throw on malformed JSON)
+
+See project MEMORY.md for full gotchas list.
+
 ## GTM Launch Strategy
 
 **Phase 1 (Months 0-6)**: StayMatch MVP
@@ -229,6 +251,18 @@ See `.env.example` for template.
 **Phase 2 (Months 6-12)**: Truth Engine + AI Trip Architect
 **Phase 3 (Year 2)**: AgencyOS B2B platform
 
+## Deployment
+
+```bash
+# Deploy to Vercel (auto from git push)
+git push origin master      # Triggers Vercel deployment
+
+# Manual deploy
+vercel --prod
+```
+
+Production URL: https://staymatch.co
+
 ---
 
-**Version**: 1.0 | **Updated**: 2026-02-14
+**Version**: 1.1 | **Updated**: 2026-02-15

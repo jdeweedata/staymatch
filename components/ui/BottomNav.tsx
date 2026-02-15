@@ -29,8 +29,8 @@ const navItems: NavItem[] = [
     },
     {
         id: "booking",
-        label: "My Booking",
-        href: "/booking",
+        label: "Bookings",
+        href: "/bookings",
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
@@ -64,7 +64,7 @@ const navItems: NavItem[] = [
     {
         id: "account",
         label: "Account",
-        href: "/login",
+        href: "/profile",
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />

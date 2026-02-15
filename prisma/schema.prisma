@@ -21,6 +21,7 @@ model User {
   preferences        Json?
   dealBreakers       String[]
   delightFactors     String[]
+  recentSearches     Json?                  // Array of { cityCode, cityName, countryCode, searchedAt }
   onboardingComplete Boolean                @default(false)
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
