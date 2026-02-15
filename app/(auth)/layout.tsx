@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthLayout({
   children,
@@ -11,11 +12,15 @@ export default function AuthLayout({
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-display font-bold text-gradient">
-              StayMatch
-            </h1>
+            <Image
+              src="/staymatch_logo.svg"
+              alt="StayMatch"
+              width={180}
+              height={45}
+              className="h-10 w-auto mx-auto"
+            />
           </Link>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-2">
             Stop searching. Start matching.
           </p>
         </div>

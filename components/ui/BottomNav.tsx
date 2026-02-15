@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface NavItem {
@@ -118,8 +119,14 @@ export default function BottomNav({
             <nav className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[220px] bg-white border-r border-border z-50 flex-col py-8 px-4">
                 {/* Brand */}
                 <div className="mb-10 px-3">
-                    <h1 className="text-xl font-bold text-foreground">StayMatch</h1>
-                    <p className="text-xs text-text-secondary mt-0.5">Stop searching. Start matching.</p>
+                    <Image
+                        src="/staymatch_logo.svg"
+                        alt="StayMatch"
+                        width={140}
+                        height={35}
+                        className="h-8 w-auto"
+                    />
+                    <p className="text-xs text-text-secondary mt-2">Stop searching. Start matching.</p>
                 </div>
 
                 {/* Nav items */}

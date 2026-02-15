@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/components/ui/SearchBar";
 import CategoryPill from "@/components/ui/CategoryPill";
@@ -89,8 +90,14 @@ export default function HomePage({ recommended, nearby }: LandingPageData) {
                 <div className="lg:hidden max-w-lg mx-auto px-5 py-3">
                     <div className="flex items-center justify-between mb-3">
                         <div>
-                            <p className="text-xs text-text-secondary">Welcome back 👋</p>
-                            <h1 className="text-lg font-bold text-foreground">StayMatch</h1>
+                            <p className="text-xs text-text-secondary mb-1">Welcome back 👋</p>
+                            <Image
+                                src="/staymatch_logo.svg"
+                                alt="StayMatch"
+                                width={120}
+                                height={30}
+                                className="h-6 w-auto"
+                            />
                         </div>
                         <div className="flex items-center gap-3">
                             <button className="relative p-2 rounded-xl hover:bg-surface-secondary transition-colors">
