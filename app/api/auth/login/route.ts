@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -54,9 +55,7 @@ export async function POST(request: NextRequest) {
     // Create session
     await createSession(user.id, user.email);
 
-    // Remove passwordHash from response
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { passwordHash: _unused, ...userWithoutPassword } = user;
+    const { passwordHash: _, ...userWithoutPassword } = user;
 
     return NextResponse.json({
       user: userWithoutPassword,
@@ -64,6 +63,43 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json({ error: "Failed to login" }, { status: 500 });
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2021") {
+        return NextResponse.json(
+          {
+            error: "Database tables not found. Run `npx prisma db push` to initialize the database.",
+            code: error.code,
+          },
+          { status: 503 }
+        );
+      }
+      return NextResponse.json(
+        {
+          error: "Database error during login",
+          code: error.code,
+          debug: error.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json(
+        {
+          error: "Cannot connect to database. Check DATABASE_URL configuration.",
+          code: "P1001",
+          debug: error.message,
+        },
+        { status: 503 }
+      );
+    }
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      { error: "Failed to login", debug: errorMessage },
+      { status: 500 }
+    );
   }
 }
