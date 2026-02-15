@@ -13,6 +13,8 @@ export interface MatchScoreBadgeProps {
   animate?: boolean;
   /** Show label below score */
   showLabel?: boolean;
+  /** Theme for text color contrast */
+  theme?: "light" | "dark";
   /** Custom className */
   className?: string;
 }
@@ -46,6 +48,7 @@ export function MatchScoreBadge({
   size = "md",
   animate = true,
   showLabel = true,
+  theme = "light",
   className,
 }: MatchScoreBadgeProps) {
   const [displayScore, setDisplayScore] = useState(animate ? 0 : score);
@@ -83,6 +86,7 @@ export function MatchScoreBadge({
 
   // Color based on score
   const getScoreColor = () => {
+    if (theme === "dark") return "text-white";
     if (score >= 90) return "text-accent-success";
     if (score >= 75) return "text-primary";
     if (score >= 60) return "text-secondary";

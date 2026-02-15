@@ -222,12 +222,13 @@ export const SwipeCard = forwardRef<HTMLDivElement, SwipeCardProps>(
 
           {/* Match Score Badge */}
           {matchScore !== undefined && matchScore > 0 && (
-            <div className="absolute top-4 left-4 z-20 bg-black/40 backdrop-blur-sm rounded-full p-1">
+            <div className="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm rounded-full p-1">
               <MatchScoreBadge
                 score={matchScore}
                 size="sm"
                 animate={isActive}
                 showLabel={false}
+                theme="dark"
               />
             </div>
           )}
