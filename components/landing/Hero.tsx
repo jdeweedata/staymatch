@@ -27,7 +27,7 @@ export default function Hero() {
               className="lg:hidden flex justify-center mb-8"
             >
               <Image
-                src="/staymatch_logo_upscaled.png"
+                src="/staymatch_logo.svg"
                 alt="StayMatch"
                 width={180}
                 height={45}

@@ -33,7 +33,7 @@ export default function LandingNav() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src="/staymatch_logo_upscaled.png"
+              src="/staymatch_logo.svg"
               alt="StayMatch"
               width={140}
               height={35}
