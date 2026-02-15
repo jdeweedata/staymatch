@@ -1,70 +1,94 @@
 import { NextResponse } from "next/server";
-import liteApiService from "@/lib/services/liteapi";
 import prisma from "@/lib/db";
+
+export interface SwipeDeckItem {
+  id: string; // HotelImage ID (for swipe API)
+  hotelId: string;
+  imageUrl: string;
+  title: string;
+  location: string;
+  rating: number | null;
+  price: string;
+  tags: string[];
+  matchScore: number;
+  description: string;
+  images: string[];
+  amenities: string[];
+}
 
 export async function GET() {
   try {
-    // First check if we have cached hotels in database
-    const cachedHotels = await prisma.hotelImage.findMany({
+    // Get swipe deck images with hotel metadata
+    const swipeDeckImages = await prisma.hotelImage.findMany({
       where: { inSwipeDeck: true, isActive: true },
       take: 30,
       orderBy: { createdAt: "desc" },
+      include: {
+        hotel: true,
+      },
     });
 
-    if (cachedHotels.length >= 15) {
-      return NextResponse.json({
-        images: cachedHotels.map((h) => ({
-          id: h.id,
-          hotelId: h.hotelId,
-          imageUrl: h.imageUrl,
-          category: h.category,
-        })),
-        source: "cache",
-      });
+    if (swipeDeckImages.length === 0) {
+      return NextResponse.json(
+        {
+          error: "No swipe deck images found. Run: npx tsx scripts/seed-swipe-deck.ts",
+          items: [],
+        },
+        { status: 404 }
+      );
     }
 
-    // Fetch fresh hotels from LiteAPI
-    const cities = ["lisbon", "bali", "bangkok"];
-    const hotels = await liteApiService.getSwipeDeckHotels(cities, 50);
+    // Group by hotel and take one image per hotel for main swipe cards
+    const hotelMap = new Map<string, typeof swipeDeckImages[0]>();
+    for (const img of swipeDeckImages) {
+      // Prefer main photos
+      const existing = hotelMap.get(img.hotelId);
+      if (!existing || img.category === "main") {
+        hotelMap.set(img.hotelId, img);
+      }
+    }
 
-    // Transform to image format for swipe deck
-    const images = hotels
-      .filter((h) => h.main_photo || (h.images && h.images.length > 0))
-      .flatMap((h) => {
-        const hotelImages = [];
+    // Transform to SwipeDeckItem format
+    const items: SwipeDeckItem[] = Array.from(hotelMap.values()).map((img) => {
+      const hotel = img.hotel;
 
-        if (h.main_photo) {
-          hotelImages.push({
-            id: `${h.id}-main`,
-            hotelId: h.id,
-            hotelName: h.name,
-            city: h.city || "",
-            imageUrl: h.main_photo,
-            category: "main",
-          });
-        }
+      // Get all images for this hotel
+      const hotelImages = swipeDeckImages
+        .filter((i) => i.hotelId === img.hotelId)
+        .map((i) => i.imageUrl);
 
-        if (h.images) {
-          h.images.slice(0, 2).forEach((img, i) => {
-            hotelImages.push({
-              id: `${h.id}-${i}`,
-              hotelId: h.id,
-              hotelName: h.name,
-              city: h.city || "",
-              imageUrl: img,
-              category: i === 0 ? "room" : "exterior",
-            });
-          });
-        }
+      // Generate realistic price based on star rating
+      const basePrice = hotel.starRating ? Math.round(80 + hotel.starRating * 40) : 150;
+      const price = `$${basePrice + Math.floor(Math.random() * 50)}`;
 
-        return hotelImages;
-      })
-      .slice(0, 30);
+      // Generate match score (in production, this comes from embedding similarity)
+      const matchScore = 70 + Math.floor(Math.random() * 28);
+
+      // Extract amenities as tags (first 4)
+      const tags = (hotel.amenities || []).slice(0, 4);
+      if (hotel.starRating && hotel.starRating >= 4) {
+        tags.unshift(`${hotel.starRating}-Star`);
+      }
+
+      return {
+        id: img.id, // HotelImage ID - this is what the swipe API needs
+        hotelId: img.hotelId,
+        imageUrl: img.imageUrl,
+        title: hotel.name,
+        location: `${hotel.city}, ${hotel.country}`,
+        rating: hotel.starRating,
+        price,
+        tags: tags.slice(0, 4),
+        matchScore,
+        description: hotel.description || `Experience ${hotel.name} in ${hotel.city}.`,
+        images: hotelImages.length > 0 ? hotelImages : [img.imageUrl],
+        amenities: hotel.amenities || [],
+      };
+    });
 
     return NextResponse.json({
-      images,
-      source: "liteapi",
-      count: images.length,
+      items,
+      count: items.length,
     });
   } catch (error) {
     console.error("Swipe deck error:", error);

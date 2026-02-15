@@ -13,7 +13,8 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "embed-hotels": "tsx scripts/embed-hotels.ts"
+    "embed-hotels": "tsx scripts/embed-hotels.ts",
+    "seed-swipe-deck": "tsx scripts/seed-swipe-deck.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.2.0",

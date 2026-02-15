@@ -8,271 +8,16 @@ import BottomNav from "@/components/ui/BottomNav";
 import { useSwipes } from "@/lib/hooks";
 
 // Extended hotel data for detail sheet
-// In production, these come from LiteAPI with full details
 interface ExtendedHotel extends SwipeItem {
   description: string;
   images: string[];
   amenities: string[];
-  reviewCount: number;
-  checkIn: string;
-  checkOut: string;
+  reviewCount?: number;
+  checkIn?: string;
+  checkOut?: string;
   highlights?: string[];
   matchReasons?: string[];
 }
-
-const SAMPLE_HOTELS: ExtendedHotel[] = [
-  {
-    id: "1",
-    imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-    title: "Boutique Ocean Villa",
-    location: "Bali, Indonesia",
-    price: "$245",
-    rating: 4.8,
-    tags: ["Beachfront", "Pool", "Spa"],
-    matchScore: 94,
-    description: "Wake up to the sound of waves in this stunning beachfront villa. Featuring private pool, outdoor shower, and direct beach access. Perfect for digital nomads seeking paradise.",
-    images: [
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-      "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80",
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-    ],
-    amenities: ["Beachfront", "Pool", "Spa", "Free WiFi", "Air Conditioning", "Room Service"],
-    reviewCount: 342,
-    checkIn: "3:00 PM",
-    checkOut: "11:00 AM",
-    highlights: ["Infinity Pool", "Sunset Views", "Beach Club Access"],
-    matchReasons: [
-      "Matches your preference for beachfront properties",
-      "Has the pool access you typically look for",
-      "Strong WiFi for remote work (85 Mbps verified)",
-    ],
-  },
-  {
-    id: "2",
-    imageUrl: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
-    title: "Urban Loft Hotel",
-    location: "Lisbon, Portugal",
-    price: "$189",
-    rating: 4.5,
-    tags: ["City Center", "Rooftop Bar", "Coworking"],
-    matchScore: 91,
-    description: "Modern loft-style rooms in the heart of Lisbon. Walk to historic sites, trendy restaurants, and vibrant nightlife. Coworking space included for remote workers.",
-    images: [
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80",
-    ],
-    amenities: ["City Center", "Rooftop Bar", "Coworking", "Fast WiFi", "Gym", "Breakfast"],
-    reviewCount: 521,
-    checkIn: "2:00 PM",
-    checkOut: "12:00 PM",
-    highlights: ["Rooftop Views", "Digital Nomad Friendly", "Historic District"],
-    matchReasons: [
-      "Dedicated coworking space like you prefer",
-      "Central location matches your exploration style",
-      "Price within your typical range",
-    ],
-  },
-  {
-    id: "3",
-    imageUrl: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-    title: "Mountain Retreat Lodge",
-    location: "Chiang Mai, Thailand",
-    price: "$95",
-    rating: 4.7,
-    tags: ["Nature", "Quiet", "Breakfast"],
-    matchScore: 87,
-    description: "Escape to the mountains of Northern Thailand. This peaceful retreat offers stunning views, organic breakfast, and a perfect environment for focused work.",
-    images: [
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-      "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
-    ],
-    amenities: ["Nature", "Quiet", "Breakfast", "Free WiFi", "Terrace", "Parking"],
-    reviewCount: 189,
-    checkIn: "3:00 PM",
-    checkOut: "11:00 AM",
-    highlights: ["Mountain Views", "Organic Food", "Meditation Space"],
-    matchReasons: [
-      "Quiet environment you've liked before",
-      "Great value within your budget",
-      "Breakfast included saves time",
-    ],
-  },
-  {
-    id: "4",
-    imageUrl: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
-    title: "Luxury Beach Resort",
-    location: "Phuket, Thailand",
-    price: "$320",
-    rating: 4.9,
-    tags: ["5-Star", "Private Beach", "Gym"],
-    matchScore: 78,
-    description: "Five-star luxury on Thailand's most beautiful coastline. Private beach, world-class spa, and exceptional dining. The ultimate tropical escape.",
-    images: [
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
-    ],
-    amenities: ["5-Star", "Private Beach", "Gym", "Spa", "Pool", "Concierge", "Restaurant"],
-    reviewCount: 856,
-    checkIn: "3:00 PM",
-    checkOut: "12:00 PM",
-    highlights: ["Private Beach", "Butler Service", "Award-Winning Spa"],
-    matchReasons: [
-      "Beach access matches your preference",
-      "Gym available for your fitness routine",
-      "Higher price point than usual, but top-rated",
-    ],
-  },
-  {
-    id: "5",
-    imageUrl: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80",
-    title: "Historic City Hotel",
-    location: "Porto, Portugal",
-    price: "$145",
-    rating: 4.4,
-    tags: ["Historic", "Restaurant", "Central"],
-    matchScore: 82,
-    description: "Stay in a beautifully restored 18th-century building in Porto's UNESCO district. Original architecture meets modern comfort.",
-    images: [
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80",
-    ],
-    amenities: ["Historic", "Restaurant", "Central", "Free WiFi", "Bar", "Breakfast"],
-    reviewCount: 412,
-    checkIn: "3:00 PM",
-    checkOut: "11:00 AM",
-    highlights: ["UNESCO Heritage Site", "River Views", "Wine Cellar"],
-    matchReasons: [
-      "Central location for easy exploration",
-      "Historic character you appreciate",
-      "On-site restaurant for convenience",
-    ],
-  },
-  {
-    id: "6",
-    imageUrl: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
-    title: "Modern Design Hotel",
-    location: "Bangkok, Thailand",
-    price: "$175",
-    rating: 4.6,
-    tags: ["Design", "Pool", "Fast WiFi"],
-    matchScore: 96,
-    description: "Award-winning design hotel in Bangkok's creative district. Perfect blend of style and functionality with lightning-fast internet.",
-    images: [
-      "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80",
-    ],
-    amenities: ["Design", "Pool", "Fast WiFi", "Coworking", "Gym", "Restaurant"],
-    reviewCount: 328,
-    checkIn: "2:00 PM",
-    checkOut: "12:00 PM",
-    highlights: ["Design Award Winner", "Rooftop Pool", "500 Mbps WiFi"],
-    matchReasons: [
-      "500 Mbps WiFi - perfect for video calls",
-      "Design aesthetic matches your taste",
-      "Coworking space available on-site",
-    ],
-  },
-  {
-    id: "7",
-    imageUrl: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80",
-    title: "Tropical Garden Resort",
-    location: "Ubud, Bali",
-    price: "$210",
-    rating: 4.8,
-    tags: ["Yoga", "Vegan", "Meditation"],
-    matchScore: 73,
-    description: "Immerse yourself in Balinese wellness culture. Daily yoga classes, plant-based cuisine, and lush tropical gardens for complete rejuvenation.",
-    images: [
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80",
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-    ],
-    amenities: ["Yoga", "Vegan", "Meditation", "Spa", "Pool", "Nature"],
-    reviewCount: 267,
-    checkIn: "3:00 PM",
-    checkOut: "11:00 AM",
-    highlights: ["Daily Yoga", "Organic Garden", "Rice Terrace Views"],
-    matchReasons: [
-      "Nature setting for relaxation",
-      "Pool access included",
-      "Wellness focus may interest you",
-    ],
-  },
-  {
-    id: "8",
-    imageUrl: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
-    title: "Riverside Boutique Inn",
-    location: "Hoi An, Vietnam",
-    price: "$85",
-    rating: 4.5,
-    tags: ["Riverside", "Bikes", "Tours"],
-    matchScore: 89,
-    description: "Charming boutique inn on the Thu Bon River. Free bicycles to explore the ancient town, and cooking classes to learn Vietnamese cuisine.",
-    images: [
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80",
-    ],
-    amenities: ["Riverside", "Bikes", "Tours", "Breakfast", "Free WiFi", "Laundry"],
-    reviewCount: 198,
-    checkIn: "2:00 PM",
-    checkOut: "11:00 AM",
-    highlights: ["Free Bicycles", "Cooking Classes", "Ancient Town"],
-    matchReasons: [
-      "Excellent value at $85/night",
-      "Boutique experience you prefer",
-      "Free bikes for local exploration",
-    ],
-  },
-  {
-    id: "9",
-    imageUrl: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80",
-    title: "Minimalist Art Hotel",
-    location: "Mexico City, Mexico",
-    price: "$165",
-    rating: 4.6,
-    tags: ["Art", "Minimalist", "Terrace"],
-    matchScore: 85,
-    description: "Contemporary art hotel in Roma Norte. Curated gallery spaces, minimalist rooms, and a rooftop terrace with city views.",
-    images: [
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80",
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
-    ],
-    amenities: ["Art", "Minimalist", "Terrace", "Bar", "Free WiFi", "Restaurant"],
-    reviewCount: 156,
-    checkIn: "3:00 PM",
-    checkOut: "12:00 PM",
-    highlights: ["Art Gallery", "Rooftop Bar", "Roma Norte Location"],
-    matchReasons: [
-      "Minimalist design you appreciate",
-      "Roma Norte - trendy neighborhood",
-      "Rooftop terrace for evening relaxation",
-    ],
-  },
-  {
-    id: "10",
-    imageUrl: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80",
-    title: "Grand Palace Hotel",
-    location: "Singapore",
-    price: "$280",
-    rating: 4.7,
-    tags: ["Luxury", "Pool", "Concierge"],
-    matchScore: 81,
-    description: "Iconic luxury hotel in the heart of Singapore. Legendary service, stunning pool, and walking distance to Marina Bay.",
-    images: [
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80",
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
-    ],
-    amenities: ["Luxury", "Pool", "Concierge", "Spa", "Gym", "Restaurant", "Bar"],
-    reviewCount: 1203,
-    checkIn: "3:00 PM",
-    checkOut: "12:00 PM",
-    highlights: ["Marina Bay Views", "Award-Winning Restaurant", "Infinity Pool"],
-    matchReasons: [
-      "Pool access you consistently prefer",
-      "Central Singapore location",
-      "High rating from 1,200+ reviews",
-    ],
-  },
-];
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -280,8 +25,79 @@ export default function OnboardingPage() {
   const [selectedHotel, setSelectedHotel] = useState<HotelDetail | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("match");
+  const [hotels, setHotels] = useState<ExtendedHotel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const swipeStackRef = useRef<HTMLDivElement>(null);
   const { swipe, undo, getProgress, error } = useSwipes();
+
+  // Fetch hotels from API on mount
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+
+        const response = await fetch("/api/hotels/swipe-deck");
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to load hotels");
+        }
+
+        if (!data.items || data.items.length === 0) {
+          throw new Error("No hotels available. Please try again later.");
+        }
+
+        // Transform API response to ExtendedHotel format
+        const transformedHotels: ExtendedHotel[] = data.items.map(
+          (item: {
+            id: string;
+            hotelId: string;
+            imageUrl: string;
+            title: string;
+            location: string;
+            rating: number | null;
+            price: string;
+            tags: string[];
+            matchScore: number;
+            description: string;
+            images: string[];
+            amenities: string[];
+          }) => ({
+            id: item.id, // HotelImage ID for swipe API
+            imageUrl: item.imageUrl,
+            title: item.title,
+            location: item.location,
+            price: item.price,
+            rating: item.rating,
+            tags: item.tags,
+            matchScore: item.matchScore,
+            description: item.description,
+            images: item.images,
+            amenities: item.amenities,
+            reviewCount: Math.floor(Math.random() * 500) + 100,
+            checkIn: "3:00 PM",
+            checkOut: "11:00 AM",
+            matchReasons: [
+              `Located in ${item.location.split(",")[0]}`,
+              item.tags[0] ? `Features ${item.tags[0].toLowerCase()}` : null,
+              item.rating && item.rating >= 4 ? `Highly rated (${item.rating} stars)` : null,
+            ].filter(Boolean) as string[],
+          })
+        );
+
+        setHotels(transformedHotels);
+      } catch (err) {
+        console.error("Failed to fetch hotels:", err);
+        setLoadError(err instanceof Error ? err.message : "Failed to load hotels");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHotels();
+  }, []);
 
   // Check progress on mount - redirect if already complete
   useEffect(() => {
@@ -295,8 +111,8 @@ export default function OnboardingPage() {
   }, [getProgress, router]);
 
   // Convert SwipeItem to HotelDetail for the detail sheet
-  const getHotelDetail = (item: SwipeItem): HotelDetail => {
-    const extended = SAMPLE_HOTELS.find((h) => h.id === item.id);
+  const getHotelDetail = useCallback((item: SwipeItem): HotelDetail => {
+    const extended = hotels.find((h) => h.id === item.id);
     return {
       id: item.id,
       name: item.title,
@@ -313,13 +129,13 @@ export default function OnboardingPage() {
       matchScore: item.matchScore,
       matchReasons: extended?.matchReasons,
     };
-  };
+  }, [hotels]);
 
   // Handle tap to open detail sheet
   const handleTap = useCallback((item: SwipeItem) => {
     setSelectedHotel(getHotelDetail(item));
     setIsDetailOpen(true);
-  }, []);
+  }, [getHotelDetail]);
 
   // Handle close detail sheet
   const handleCloseDetail = useCallback(() => {
@@ -476,15 +292,38 @@ export default function OnboardingPage() {
 
       {/* Swipe Stack */}
       <div ref={swipeStackRef} className="flex-1 overflow-hidden pb-20 lg:pb-0">
-        <SwipeStack
-          items={SAMPLE_HOTELS}
-          onSwipeRight={handleSwipeRight}
-          onSwipeLeft={handleSwipeLeft}
-          onTap={handleTap}
-          onComplete={handleComplete}
-          onUndo={handleUndo}
-          visibleCards={3}
-        />
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-muted-foreground">Loading hotels...</p>
+          </div>
+        ) : loadError ? (
+          <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-accent-error/10 flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-accent-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h2 className="text-lg font-semibold text-foreground mb-2">Unable to Load Hotels</h2>
+            <p className="text-muted-foreground mb-4">{loadError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <SwipeStack
+            items={hotels}
+            onSwipeRight={handleSwipeRight}
+            onSwipeLeft={handleSwipeLeft}
+            onTap={handleTap}
+            onComplete={handleComplete}
+            onUndo={handleUndo}
+            visibleCards={3}
+          />
+        )}
       </div>
 
       {/* Hotel Detail Sheet */}
@@ -494,7 +333,7 @@ export default function OnboardingPage() {
         onClose={handleCloseDetail}
         onLike={(hotel) => {
           // Like and close
-          const item = SAMPLE_HOTELS.find((h) => h.id === hotel.id);
+          const item = hotels.find((h) => h.id === hotel.id);
           if (item) {
             handleSwipeRight(item);
           }
